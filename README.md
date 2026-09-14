@@ -2,4 +2,4 @@
 
 اضغط على الزر لتربح سندوتش طعمية بالبتنجان — بس الزر بيهرب من الموس.
 
-الموقع: https://samemahmods.github.io/taameya/
+الموقع: https://samemahmods-oss.github.io/taameya/
