@@ -1,0 +1,399 @@
+<title>سندوتش الطعمية الهارب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bread:#F6E7C4;      /* عيش بلدي */
+    --bread-deep:#E4C98F;
+    --tahini:#FFF8EA;
+    --falafel:#5E7C2A;    /* أخضر الطعمية من جوه */
+    --falafel-dark:#3E5619;
+    --eggplant:#48204F;   /* بتنجان */
+    --eggplant-deep:#2E1233;
+    --tomato:#C93A2C;
+    --ink:#2B1B14;
+    --muted:#7A5C48;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    direction:rtl;
+    font-family:"Tajawal","Segoe UI",Tahoma,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(ellipse at 50% -10%, #fff3d6 0%, transparent 55%),
+      repeating-linear-gradient(135deg, transparent 0 22px, rgba(74,32,79,.045) 22px 24px),
+      var(--bread);
+    overflow:hidden;
+    min-height:100vh;
+    position:relative;
+  }
+  /* الإطار المرسوم زي يافطة عربية الطعمية */
+  .frame{
+    position:fixed; inset:14px;
+    border:4px solid var(--eggplant);
+    border-radius:18px;
+    pointer-events:none;
+    box-shadow:inset 0 0 0 6px var(--bread), inset 0 0 0 8px var(--tomato);
+  }
+
+  main{
+    position:relative; z-index:1;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:48px 24px 110px;
+    gap:12px;
+  }
+  .eyebrow{
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-size:clamp(15px,2vw,20px);
+    letter-spacing:.06em;
+    color:var(--tomato);
+    background:var(--tahini);
+    border:2px solid var(--tomato);
+    padding:4px 18px 2px;
+    border-radius:999px;
+    margin:0;
+  }
+  h1{
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-weight:400;
+    font-size:clamp(38px,7.5vw,88px);
+    line-height:1.12;
+    margin:8px 0 0;
+    max-width:14ch;
+    text-wrap:balance;
+    color:var(--eggplant-deep);
+    text-shadow:3px 3px 0 var(--bread-deep);
+  }
+  h1 em{ font-style:normal; color:var(--falafel); }
+  h1 strong{ font-weight:400; color:var(--tomato); }
+  .sub{
+    font-size:clamp(17px,2.2vw,22px);
+    font-weight:500;
+    color:var(--muted);
+    margin:4px 0 0;
+    max-width:36ch;
+    text-wrap:balance;
+  }
+
+  /* الزر */
+  #btn{
+    position:fixed;
+    left:50%; top:62%;
+    transform:translate(-50%,-50%);
+    z-index:5;
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-size:clamp(24px,3.2vw,36px);
+    letter-spacing:.02em;
+    color:var(--tahini);
+    background:linear-gradient(180deg,#6f9236 0%, var(--falafel) 55%, var(--falafel-dark) 100%);
+    border:3px solid var(--falafel-dark);
+    border-radius:999px;
+    padding:14px 40px 10px;
+    cursor:pointer;
+    box-shadow:0 8px 0 var(--eggplant-deep), 0 14px 24px rgba(46,18,51,.28);
+    transition:left .18s cubic-bezier(.2,.9,.3,1.2), top .18s cubic-bezier(.2,.9,.3,1.2);
+    white-space:nowrap;
+    user-select:none;
+    touch-action:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  body{ touch-action:none; }
+  #btn:focus-visible{ outline:4px solid var(--tomato); outline-offset:5px; }
+  #btn.shake{ animation:wiggle .35s ease; }
+  @keyframes wiggle{
+    0%,100%{transform:translate(-50%,-50%) rotate(0)}
+    25%{transform:translate(-50%,-50%) rotate(-8deg)}
+    75%{transform:translate(-50%,-50%) rotate(8deg)}
+  }
+
+  /* لوحة العداد والرد */
+  .board{
+    position:fixed; bottom:34px; left:50%; transform:translateX(-50%);
+    z-index:4;
+    display:flex; align-items:center; gap:18px;
+    background:var(--tahini);
+    border:3px solid var(--eggplant);
+    border-radius:14px;
+    padding:10px 20px;
+    box-shadow:5px 5px 0 var(--eggplant);
+    max-width:calc(100vw - 48px);
+  }
+  .count{
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-size:30px; line-height:1;
+    color:var(--tomato);
+    font-variant-numeric:tabular-nums;
+    min-width:2ch;
+  }
+  .count-label{ font-size:13px; color:var(--muted); font-weight:700; display:block; letter-spacing:.04em; }
+  .taunt{
+    font-size:clamp(16px,2vw,20px);
+    font-weight:700;
+    color:var(--eggplant-deep);
+    min-width:18ch;
+    text-align:right;
+  }
+
+  /* شاشة الفوز (للي بيوصل بالكيبورد) */
+  .win{
+    position:fixed; inset:0; z-index:20;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(46,18,51,.82);
+    padding:24px;
+  }
+  .win[hidden]{display:none}
+  .win-card{
+    background:var(--tahini);
+    border:4px solid var(--tomato);
+    border-radius:20px;
+    padding:36px 32px 28px;
+    max-width:520px; text-align:center;
+    box-shadow:8px 8px 0 var(--eggplant);
+  }
+  .win-card h2{
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-weight:400; font-size:44px; margin:0 0 8px; color:var(--falafel-dark);
+  }
+  .win-card p{ margin:0 0 20px; font-size:18px; color:var(--muted); line-height:1.6; }
+  .win-card button{
+    font-family:"Lalezar","Tajawal",sans-serif;
+    font-size:22px; color:var(--tahini); background:var(--eggplant);
+    border:0; border-radius:999px; padding:10px 28px 6px; cursor:pointer;
+  }
+  .win-card button:focus-visible{ outline:4px solid var(--tomato); outline-offset:4px; }
+
+  /* السندوتش المرسوم */
+  .sando{ width:min(300px,55vw); height:auto; margin-top:6px; filter:drop-shadow(4px 6px 0 rgba(46,18,51,.18)); }
+
+  @media (prefers-reduced-motion: reduce){
+    #btn{ transition:none; }
+    #btn.shake{ animation:none; }
+  }
+  @media (max-width:600px){
+    .board{ flex-direction:column; gap:6px; text-align:center; bottom:22px; }
+    .taunt{ text-align:center; min-width:0; }
+    main{ padding-bottom:160px; }
+  }
+</style>
+
+<div class="frame" aria-hidden="true"></div>
+
+<main>
+  <p class="eyebrow">عربية الطعمية · فرع الإنترنت</p>
+  <h1>اضغط على الزر لتربح <em>سندوتش طعمية</em> <strong>بالبتنجان</strong></h1>
+  <p class="sub">سندوتش واحد بس. أول واحد يضغط ياخده. مفيش زحمة، مفيش طابور، بس... حاول توصل للزر الأول.</p>
+
+  <svg class="sando" viewBox="0 0 300 150" role="img" aria-label="سندوتش طعمية بالبتنجان في عيش بلدي">
+    <ellipse cx="150" cy="118" rx="140" ry="24" fill="#E4C98F"/>
+    <ellipse cx="150" cy="112" rx="140" ry="24" fill="#EFD8A4"/>
+    <path d="M18 108 Q150 96 282 108 L282 104 Q150 92 18 104Z" fill="#FFF3D9"/>
+    <ellipse cx="80" cy="100" rx="40" ry="11" fill="#48204F"/>
+    <ellipse cx="80" cy="98" rx="30" ry="7" fill="#E9D7A8"/>
+    <ellipse cx="220" cy="100" rx="40" ry="11" fill="#48204F"/>
+    <ellipse cx="220" cy="98" rx="30" ry="7" fill="#E9D7A8"/>
+    <ellipse cx="150" cy="99" rx="34" ry="10" fill="#C93A2C"/>
+    <ellipse cx="150" cy="97" rx="22" ry="5" fill="#E8604F"/>
+    <g>
+      <ellipse cx="70" cy="80" rx="30" ry="19" fill="#7A4A1E"/>
+      <ellipse cx="70" cy="76" rx="28" ry="15" fill="#9A6230"/>
+      <ellipse cx="70" cy="74" rx="16" ry="7" fill="#5E7C2A"/>
+      <ellipse cx="150" cy="78" rx="32" ry="20" fill="#7A4A1E"/>
+      <ellipse cx="150" cy="74" rx="30" ry="16" fill="#9A6230"/>
+      <ellipse cx="150" cy="72" rx="18" ry="8" fill="#5E7C2A"/>
+      <ellipse cx="230" cy="80" rx="30" ry="19" fill="#7A4A1E"/>
+      <ellipse cx="230" cy="76" rx="28" ry="15" fill="#9A6230"/>
+      <ellipse cx="230" cy="74" rx="16" ry="7" fill="#5E7C2A"/>
+      <circle cx="60" cy="70" r="1.8" fill="#FFF3D9"/><circle cx="84" cy="68" r="1.8" fill="#FFF3D9"/>
+      <circle cx="140" cy="66" r="1.8" fill="#FFF3D9"/><circle cx="164" cy="70" r="1.8" fill="#FFF3D9"/>
+      <circle cx="222" cy="69" r="1.8" fill="#FFF3D9"/><circle cx="244" cy="72" r="1.8" fill="#FFF3D9"/>
+    </g>
+    <path d="M14 78 Q150 6 286 78 Q150 96 14 78Z" fill="#E4C98F"/>
+    <path d="M22 76 Q150 14 278 76 Q150 88 22 76Z" fill="#F1DDAA"/>
+    <ellipse cx="120" cy="44" rx="34" ry="8" fill="#F8E9C2" opacity=".8"/>
+  </svg>
+</main>
+
+<button id="btn" type="button">اضغط هنا وخد السندوتش</button>
+
+<div class="board" role="status" aria-live="polite">
+  <div>
+    <span class="count" id="count">0</span>
+    <span class="count-label">محاولة</span>
+  </div>
+  <div class="taunt" id="taunt">يلا، الزر مستنيك... يعني كده.</div>
+</div>
+
+<div class="win" id="win" hidden>
+  <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <h2 id="winTitle">ألف هنا!</h2>
+    <p>وصلت للزر بالكيبورد، والزر معندوش حل قدام Tab. كسبت سندوتش طعمية بالبتنجان (افتراضي، الشحن مش متاح حالياً).</p>
+    <button type="button" id="again">واحد تاني؟</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btn');
+  var countEl = document.getElementById('count');
+  var tauntEl = document.getElementById('taunt');
+  var win = document.getElementById('win');
+  var again = document.getElementById('again');
+
+  var taunts = [
+    'هههه قربت! بس لأ.',
+    'الزر أسرع منك يا باشا.',
+    'جرب بإيدك التانية.',
+    'السندوتش مش نصيبك النهاردة.',
+    'أنا شايفك بتحاول، بجد.',
+    'الموس بتاعك بطيء ولا إيه؟',
+    'قول لنفسك: أنا مش جعان أصلاً.',
+    'هاتلك فول من الشارع أسهل.',
+    'الزر قال ما تزعلش، مفيش حاجة شخصية.',
+    'لو وصلتله هعمل لك تاني ببلاش.',
+    'ركز... مش هينفع برضه.',
+    'البتنجان لسه بيتقلي، خد وقتك.',
+    'إنت لسه هنا؟ احترام.',
+    'الزر اتعلم من عربية طعمية في شبرا.',
+    'خلاص هستسلم... لأ كدب.'
+  ];
+  var count = 0;
+  var lastMove = 0;
+  var SAFE = 130;        // المسافة اللي الزر يبدأ يهرب عندها
+  var MARGIN = 28;
+
+  function setTaunt(){
+    if (count >= 40) { tauntEl.textContent = 'أربعين محاولة. بجد؟ روح كل.'; return; }
+    if (count >= 25) { tauntEl.textContent = 'العزيمة دي تتحط في حاجة تانية.'; return; }
+    tauntEl.textContent = taunts[(count - 1) % taunts.length];
+  }
+
+  function rect(){ return btn.getBoundingClientRect(); }
+
+  function flee(px, py){
+    var now = performance.now();
+    if (now - lastMove < 120) return;   // ما يلعبش زي المجنون
+    lastMove = now;
+
+    var r = rect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var w = r.width, h = r.height;
+    var bx = r.left + w/2, by = r.top + h/2;
+
+    // اتجاه بعيد عن المؤشر + شوية عشوائية
+    var ang = Math.atan2(by - py, bx - px) + (Math.random() - .5) * 1.4;
+    var dist = 180 + Math.random() * 220;
+    var nx = bx + Math.cos(ang) * dist;
+    var ny = by + Math.sin(ang) * dist;
+
+    var minX = MARGIN + w/2, maxX = vw - MARGIN - w/2;
+    var minY = MARGIN + h/2, maxY = vh - 120 - h/2;   // سيب مكان للوحة تحت
+
+    // لو خبط في الحيطة، اقفز لمكان عشوائي بعيد عن المؤشر
+    if (nx < minX || nx > maxX || ny < minY || ny > maxY) {
+      var tries = 0;
+      do {
+        nx = minX + Math.random() * (maxX - minX);
+        ny = minY + Math.random() * (maxY - minY);
+        tries++;
+      } while (Math.hypot(nx - px, ny - py) < SAFE + 80 && tries < 20);
+    }
+
+    btn.style.left = nx + 'px';
+    btn.style.top  = ny + 'px';
+
+    count++;
+    countEl.textContent = count;
+    setTaunt();
+    btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+  }
+
+  function onMove(e){
+    var r = rect();
+    // أقرب نقطة على حدود الزر للمؤشر
+    var cx = Math.max(r.left, Math.min(e.clientX, r.right));
+    var cy = Math.max(r.top,  Math.min(e.clientY, r.bottom));
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) < SAFE) flee(e.clientX, e.clientY);
+  }
+
+  document.addEventListener('mousemove', onMove, {passive:true});
+
+  /* ---------- التليفون ---------- */
+  var lastTouch = 0;
+  var roamTimer = null;
+  var isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  // أي لمسة في أي حتة على الشاشة قريبة من الزر -> يهرب (مش لازم عليه بالظبط)
+  function onTouchPoint(e){
+    lastTouch = performance.now();
+    startRoaming();
+    if (!win.hidden) return;   // شاشة الفوز مفتوحة، سيب زرار "واحد تاني" يشتغل
+    var r = rect();
+    var cx = Math.max(r.left, Math.min(e.clientX, r.right));
+    var cy = Math.max(r.top,  Math.min(e.clientY, r.bottom));
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) < SAFE + 40) {
+      if (e.cancelable) e.preventDefault();
+      flee(e.clientX, e.clientY);
+    }
+  }
+  document.addEventListener('pointerdown', function(e){ if (e.pointerType !== 'mouse') onTouchPoint(e); }, {passive:false});
+  document.addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') onTouchPoint(e); }, {passive:false});
+
+  // احتياطي للمتصفحات اللي مبتبعتش pointer events
+  document.addEventListener('touchstart', function(e){
+    lastTouch = performance.now();
+    var t = e.touches[0]; if (!t) return;
+    onTouchPoint({clientX:t.clientX, clientY:t.clientY, cancelable:e.cancelable, preventDefault:function(){ e.preventDefault(); }});
+  }, {passive:false});
+
+  // على التليفون الزر ما بيقفش: بيتنقل لوحده كل شوية
+  function roamOnce(){
+    var r = rect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var w = r.width, h = r.height;
+    var minX = MARGIN + w/2, maxX = vw - MARGIN - w/2;
+    var minY = MARGIN + h/2, maxY = vh - 120 - h/2;
+    lastMove = 0;
+    btn.style.left = (minX + Math.random() * (maxX - minX)) + 'px';
+    btn.style.top  = (minY + Math.random() * (maxY - minY)) + 'px';
+    btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+  }
+  function startRoaming(){
+    if (roamTimer) return;
+    roamTimer = setInterval(function(){
+      if (document.hidden || !win.hidden) return;
+      roamOnce();
+    }, 1400 + Math.random() * 600);
+  }
+  if (isTouchDevice) startRoaming();
+
+  // أي click جاي من لمسة أو موس -> مرفوض. الكيبورد بس هو اللي يكسب.
+  btn.addEventListener('click', function(e){
+    var fromTouch = performance.now() - lastTouch < 900;
+    if (e.detail !== 0 || fromTouch) {
+      e.preventDefault();
+      flee(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2);
+      return;
+    }
+    // e.detail === 0 ومفيش لمسة قريبة يعني كيبورد -> كسبت
+    win.hidden = false;
+    again.focus();
+  });
+
+  again.addEventListener('click', function(){
+    win.hidden = true;
+    count = 0; countEl.textContent = '0';
+    tauntEl.textContent = 'لفة تانية. الزر جهز نفسه.';
+    btn.style.left = '50%'; btn.style.top = '62%';
+    btn.focus();
+  });
+
+  window.addEventListener('resize', function(){
+    var r = rect(), vw = window.innerWidth, vh = window.innerHeight;
+    if (r.right > vw || r.bottom > vh - 100) { btn.style.left = '50%'; btn.style.top = '62%'; }
+  });
+})();
+</script>
